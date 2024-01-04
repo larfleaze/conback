@@ -11,13 +11,13 @@ const { getAuth } = require("firebase/auth");
 const { readFile, writeFile } = require("fs").promises;
 // const Key = import.meta.env.VITE_FIREBASE_AUTH;
 const firebaseConfig = {
-  apiKey: process.env.VITE_APIKEY,
-  authDomain: process.env.VITE_DOMAIN,
-  projectId: process.env.VITE_ID,
-  storageBucket: process.env.VITE_STORE,
-  messagingSenderId: process.env.VITE_SENDID,
-  appId: process.env.VITE_APPID,
-  databaseURL: process.env.VITE_URL,
+  apiKey: process.env.APIKEY,
+  authDomain: process.env.DOMAIN,
+  projectId: process.env.ID,
+  storageBucket: process.env.STORE,
+  messagingSenderId: process.env.SENDID,
+  appId: process.env.APPID,
+  databaseURL: process.env.URL,
 };
 const app = initializeApp(firebaseConfig);
 
