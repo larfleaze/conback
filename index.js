@@ -4,19 +4,20 @@ const fastify = require("fastify")({ logger: true });
 const fs = require("fs").promises;
 const solc = require("solc");
 require("dotenv").config();
+// const auth = require("./src/firebase-config")
 const { initializeApp } = require("firebase/app");
 const { getDatabase, ref, set, get, push } = require("firebase/database");
 const { getAuth } = require("firebase/auth");
 const { readFile, writeFile } = require("fs").promises;
-
+// const Key = import.meta.env.VITE_FIREBASE_AUTH;
 const firebaseConfig = {
-   apiKey: process.env.APIKEY,
-  authDomain: process.env.DOMAIN,
-  projectId: process.env.ID,
-  storageBucket: process.env.STORE,
-  messagingSenderId: process.env.SENDID,
-  appId: process.env.APPID,
-  databaseURL: process.env.URL,
+  apiKey: process.env.VITE_APIKEY,
+  authDomain: process.env.VITE_DOMAIN,
+  projectId: process.env.VITE_ID,
+  storageBucket: process.env.VITE_STORE,
+  messagingSenderId: process.env.VITE_SENDID,
+  appId: process.env.VITE_APPID,
+  databaseURL: process.env.VITE_URL,
 };
 const app = initializeApp(firebaseConfig);
 
@@ -70,7 +71,7 @@ fastify.post("/compile", async (request, reply) => {
     // Store the ABI and Bytecode into a JSON file
     const artifact = JSON.stringify({ abi, bytecode }, null, 2);
 
-    await fs.writeFile("Demo.json", artifact);
+    // await fs.writeFile("Demo.json", artifact);
 
     const db = getDatabase();
     const compilationRef = push(ref(db, "vite/firstcompile"));
@@ -102,7 +103,7 @@ fastify.post('/secondcompile', async (request, reply) => {
 
     // Store the ABI and Bytecode into a JSON file
     const artifact = JSON.stringify({ abi, bytecode }, null, 2);
-    await fs.writeFile('Demo.json', artifact);
+    // await fs.writeFile('Demo.json', artifact);
 
     // Save the compilation data to Firebase
     const db = getDatabase();
@@ -110,7 +111,8 @@ fastify.post('/secondcompile', async (request, reply) => {
     try {
       await set(compilationRef, {
         timestamp: Date.now(),
-        artifact: JSON.parse(await readFile("Demo.json", "utf8")),
+        artifact: JSON.parse(artifact),
+        // artifact: JSON.parse(await readFile("Demo.json", "utf8")),
         // artifact: JSON.parse(await readFile("Demo.json", "utf8")),
       });
     } catch (error) {
@@ -153,10 +155,10 @@ fastify.get("/readCompilationsFromFirebase", async (request, reply) => {
           result.push(returneddata);
 
           // Write the parsed data to ParsedData.json
-          await fs.writeFile(
-            `./src/ParsedJSONData/${compilationKey}.json`,
-            JSON.stringify(parsedData, null, 2)
-          );
+          // await fs.writeFile(
+          //   `./src/ParsedJSONData/${compilationKey}.json`,
+          //   JSON.stringify(parsedData, null, 2)
+          // );
 
           console.log(
             `Data parsed and written to ParsedJSONData${compilationKey}.json`
